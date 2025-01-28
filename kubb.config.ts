@@ -1,8 +1,8 @@
 import { defineConfig } from '@kubb/core';
 import { pluginOas } from '@kubb/plugin-oas';
-import { pluginTanstackQuery } from '@kubb/swagger-tanstack-query';
-import { pluginTs } from '@kubb/swagger-ts';
-import { pluginZod } from '@kubb/swagger-zod';
+import { pluginTs } from "@kubb/plugin-ts"
+import { pluginZod } from "@kubb/plugin-zod"
+import { pluginReactQuery } from '@kubb/plugin-react-query'
 
 export default defineConfig({
   root: '.',
@@ -23,37 +23,41 @@ export default defineConfig({
     pluginTs({
       output: {
         path: './types',
-        exportType: false,
+        barrelType: false,
       },
       group: {
         type: 'tag',
-        output: './types/controllers/{{tag}}',
-      },
+        name({ group }){
+          return `./types/controllers/${group}`
+        }
+      }
     }),
     pluginZod({
       output: {
         path: './zod',
-        exportType: false,
+        barrelType: false,
       },
       group: {
         type: 'tag',
-        output: './zod/controllers/{{tag}}',
+        name({ group }){
+          return `./zod/controllers/${group}`
+        }
       },
       typed: true,
       dateType: 'string',
     }),
-    pluginTanstackQuery({
+    pluginReactQuery({
       output: {
         path: './hooks',
-        exportType: false,
+        barrelType: false,
       },
       group: {
         type: 'tag',
-        output: './hooks/{{tag}}',
+        name({ group }){
+          return `./hooks/${group}`
+        }
       },
-      framework: 'react',
-      mutate: {
-        variablesType: 'hook',
+      mutation: {
         methods: ['post', 'put', 'delete'],
       },
       query: {
